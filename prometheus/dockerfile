@@ -1,10 +1,15 @@
 ARG VERSION=v3.2.1
 
+# Build stage to get envsubst binary
+FROM alpine:3.19 AS builder
+RUN apk add --no-cache gettext
+
+# Final Prometheus image
 FROM prom/prometheus:${VERSION}
 
-# Install envsubst (part of gettext)
+# Copy envsubst binary from builder
 USER root
-RUN apk add --no-cache gettext
+COPY --from=builder /usr/bin/envsubst /usr/bin/envsubst
 
 # Copy the prom.yml template
 COPY prom.yml /etc/prometheus/prom.yml.template
@@ -15,7 +20,7 @@ RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
     echo 'exec /bin/prometheus "$@"' >> /docker-entrypoint.sh && \
     chmod +x /docker-entrypoint.sh
 
-# Switch back to prometheus user
+# Switch back to nobody user
 USER nobody
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
