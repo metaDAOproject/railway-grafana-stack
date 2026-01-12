@@ -11,6 +11,10 @@ services:
       - "9090:9090"
     volumes:
       - prometheus_data:/prometheus
+    environment:
+      # Set these in Railway dashboard, not here (this is just for local dev)
+      - WS_SERVER_TARGET=${WS_SERVER_TARGET:-localhost:3001}
+      # - COINGECKO_API_TARGET=${COINGECKO_API_TARGET:-localhost:3000}
 
   loki:
     build:

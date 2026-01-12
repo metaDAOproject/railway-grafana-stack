@@ -6,14 +6,15 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  # - job_name: 'coingecko-api'
-  #   scrape_interval: 15s
-  #   metrics_path: '/api/tickers'
-  #   static_configs:
-  #     - targets: ['futarchy-coingecko-api.railway.internal:3000']
-
   - job_name: 'ws-server'
     scrape_interval: 15s
     metrics_path: '/metrics/prometheus'
     static_configs:
-      - targets: ['bubbly-imagination.railway.internal']
+      - targets: ['${WS_SERVER_TARGET}']
+
+  # Add more jobs using environment variables:
+  # - job_name: 'coingecko-api'
+  #   scrape_interval: 15s
+  #   metrics_path: '/metrics'
+  #   static_configs:
+  #     - targets: ['${COINGECKO_API_TARGET}']
