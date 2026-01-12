@@ -6,16 +6,14 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  # - job_name: 'example_api'
-  #   scheme: http
-  #   static_configs:
-  #     - targets: ['example_api:9091']
+  - job_name: 'coingecko-api'
+    scrape_interval: 15s
+    metrics_path: '/api/tickers'
+    static_configs:
+      - targets: ['futarchy-coingecko-api.railway.internal:3000']
 
-  #  ? TODO: add your services here
-  # - job_name: 'your-job-name'
-  #   scheme: https
-  #   static_configs:
-  #     - targets: ['URL_GOES_HERE']
-  #   basic_auth:
-  #     username: HTTP_AUTH_USERNAME_GOES_HERE
-  #     password: HTTP_AUTH_PASSWORD_GOES_HERE
+  - job_name: 'ws-server'
+    scrape_interval: 15s
+    metrics_path: '/metrics/prometheus'
+    static_configs:
+      - targets: ['bubbly-imagination.railway.internal:3001']
