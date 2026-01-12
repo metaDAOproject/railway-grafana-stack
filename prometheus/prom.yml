@@ -6,14 +6,14 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'coingecko-api'
-    scrape_interval: 15s
-    metrics_path: '/api/tickers'
-    static_configs:
-      - targets: ['futarchy-coingecko-api.railway.internal:3000']
+  # - job_name: 'coingecko-api'
+  #   scrape_interval: 15s
+  #   metrics_path: '/api/tickers'
+  #   static_configs:
+  #     - targets: ['futarchy-coingecko-api.railway.internal:3000']
 
   - job_name: 'ws-server'
     scrape_interval: 15s
     metrics_path: '/metrics/prometheus'
     static_configs:
-      - targets: ['bubbly-imagination.railway.internal:3001']
+      - targets: ['bubbly-imagination.railway.internal']
