@@ -2,8 +2,20 @@ ARG VERSION=v3.2.1
 
 FROM prom/prometheus:${VERSION}
 
-# Copy the prom.yml configuration file to the container
-COPY prom.yml /etc/prometheus/prom.yml
+USER root
 
-# Command to run Prometheus
+# Copy config template
+COPY prom.yml /etc/prometheus/prom.yml.template
+
+# Create startup script that substitutes env vars using sed at runtime
+RUN echo '#!/bin/sh' > /entrypoint.sh && \
+    echo 'sed -e "s|\${WS_SERVER_TARGET}|$WS_SERVER_TARGET|g" \' >> /entrypoint.sh && \
+    echo '    -e "s|\${COINGECKO_API_TARGET}|$COINGECKO_API_TARGET|g" \' >> /entrypoint.sh && \
+    echo '    /etc/prometheus/prom.yml.template > /etc/prometheus/prom.yml' >> /entrypoint.sh && \
+    echo 'exec /bin/prometheus "$@"' >> /entrypoint.sh && \
+    chmod +x /entrypoint.sh
+
+USER nobody
+
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["--config.file=/etc/prometheus/prom.yml", "--storage.tsdb.path=/prometheus"]
