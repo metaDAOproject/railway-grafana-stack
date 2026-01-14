@@ -1,27 +1,9 @@
 ARG VERSION=v3.2.1
 
-# Build stage to get envsubst binary
-FROM alpine:3.19 AS builder
-RUN apk add --no-cache gettext
-
-# Final Prometheus image
 FROM prom/prometheus:${VERSION}
 
-# Copy envsubst binary from builder
-USER root
-COPY --from=builder /usr/bin/envsubst /usr/bin/envsubst
+# Copy the prom.yml configuration file to the container
+COPY prom.yml /etc/prometheus/prom.yml
 
-# Copy the prom.yml template
-COPY prom.yml /etc/prometheus/prom.yml.template
-
-# Create entrypoint script that substitutes env vars
-RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
-    echo 'envsubst < /etc/prometheus/prom.yml.template > /etc/prometheus/prom.yml' >> /docker-entrypoint.sh && \
-    echo 'exec /bin/prometheus "$@"' >> /docker-entrypoint.sh && \
-    chmod +x /docker-entrypoint.sh
-
-# Switch back to nobody user
-USER nobody
-
-ENTRYPOINT ["/docker-entrypoint.sh"]
+# Command to run Prometheus
 CMD ["--config.file=/etc/prometheus/prom.yml", "--storage.tsdb.path=/prometheus"]

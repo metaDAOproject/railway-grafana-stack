@@ -1,2 +1,5 @@
 # example deps
 node_modules/
+
+# Prometheus targets (contains private URLs)
+prometheus/targets.json
