@@ -10,7 +10,7 @@ COPY prom.yml /etc/prometheus/prom.yml.template
 # Create startup script that substitutes env vars using sed at runtime
 RUN echo '#!/bin/sh' > /entrypoint.sh && \
     echo 'sed -e "s|\${WS_SERVER_TARGET}|$WS_SERVER_TARGET|g" \' >> /entrypoint.sh && \
-    echo '    -e "s|\${COINGECKO_API_TARGET}|$COINGECKO_API_TARGET|g" \' >> /entrypoint.sh && \
+    echo '    -e "s|\${FUTARCHY_API_TARGET}|$FUTARCHY_API_TARGET|g" \' >> /entrypoint.sh && \
     echo '    /etc/prometheus/prom.yml.template > /etc/prometheus/prom.yml' >> /entrypoint.sh && \
     echo 'exec /bin/prometheus "$@"' >> /entrypoint.sh && \
     chmod +x /entrypoint.sh
